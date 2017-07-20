@@ -1,0 +1,39 @@
+VerboseLevel:		1
+DrawOptical:		1000 #0 all trajectories, -1 no trajectory, N every Nth
+
+Gamma.Energy:		2000	#keV
+Gamma.Direction:	2
+#0: isotropic,  2: specify theta phi
+Gamma.Direction.Theta:	180	 #deg
+Gamma.Direction.Phi:	0	 #deg
+
+Source.Position.X:	0	#mm
+Source.Position.Y:	0	#mm
+Source.Position.Z:	80	#mm
+
+#position of the scintillator
+Scint.Position.X:	0  #mm 
+Scint.Position.Y:	0  #mm
+Scint.Position.Z:	0  #mm
+
+#scintillator dimensions
+Scint.Height:		82.5	#mm x 
+Scint.Width:		82.5	#mm y 
+Scint.Depth:		51	#mm z
+
+#crystal properties
+Scint.Properties:	/home/wimmer/geant/GAGG/scintproperties.dat
+
+#pmt dimensions
+PMT.Height:		82.5	#mm x 
+PMT.Width:		82.5	#mm y 
+PMT.Depth:		151	#mm z
+PMT.Thick:		1	#mm wall thickness
+#glass properties
+Glass.Refraction.File	/home/wimmer/geant/GAGG/settings/glassrefraction.dat
+Air.Refraction.File	/home/wimmer/geant/GAGG/settings/airrefraction.dat
+
+#cathode
+Cathode.Depth:		1	#mm
+
+

@@ -1,0 +1,10 @@
+Scint.LightYield.File:	/home/wimmer/geant/GAGG/settings/relativelightyield.dat
+Scint.Refraction.File:	/home/wimmer/geant/GAGG/settings/scintrefraction.dat
+Scint.LightYield:	12.8 #/keV
+Scint.ResolutionScale:	1.0
+Scint.FastTimeConstant:	1.8 #ns
+Scint.SlowTimeConstant:	14.2 #ns
+Scint.FastScintillatorRiseTime: 0.7 #ns
+Scint.YieldRatio:	1.0
+Scint.BirksConstant:	0.0159	#cm/MeV
+
