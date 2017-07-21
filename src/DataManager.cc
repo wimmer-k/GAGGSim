@@ -12,7 +12,8 @@ DataManager::DataManager(const char* filename, int nevents){
   ffile->cd();
   ftree = new TTree("str","simulation data");
   ftree->Branch("esim",&fesim,"esim/D");
-  ftree->Branch("edet",&fedet,"edet/D");
+  ftree->Branch("edep",&fedep,"edep/D");
+  ftree->Branch("npho",&fnpho,"npho/I");
   ftree->BranchRef();
 }
 DataManager::~DataManager(){
@@ -23,14 +24,16 @@ DataManager::~DataManager(){
 void DataManager::SetEsim(double e){
   fesim = e;
 }
-void DataManager::FillTree(double en){
-  fedet = en;
+void DataManager::FillTree(double en, int npho){
+  fedep = en;
+  fnpho = npho;
   ftree->Fill();
   fesim = 0;
 }
 void DataManager::Clear(const Option_t*){
   fesim = 0;
-  fedet = 0;
+  fedep = 0;
+  fnpho = 0;
 }
 void DataManager::Close(){
   ffile->cd();

@@ -19,7 +19,7 @@
 
 class EventAction;
 
-#include "SensitiveDetector.hh"
+#include "ScintSD.hh"
 #include "Trajectory.hh"
 #include "DataManager.hh"
 
@@ -38,6 +38,8 @@ public:
 private:
   DataManager* fdata;
   int fDrawOptical;
+  int fScintCollID;
+  int fCathodeCollID;
 };
 
 #endif

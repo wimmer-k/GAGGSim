@@ -19,7 +19,7 @@ public:
   ~DataManager();
   void Init(const char* filename);
   void SetEsim(double e);
-  void FillTree(double en);
+  void FillTree(double en, int npho=0);
   void Clear(const Option_t* option="");
   void Close();
   int GetNevents(){return fnevents;};
@@ -27,7 +27,8 @@ public:
 private:
   int fnevents;
   double fesim;
-  double fedet;
+  double fedep;
+  int    fnpho;
   TTree* ftree;
   TFile* ffile;
 };

@@ -3,7 +3,8 @@
 #include "PhysicsList.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "EventAction.hh"
-#include "SensitiveDetector.hh"
+#include "SteppingAction.hh"
+#include "ScintSD.hh"
 
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
@@ -91,8 +92,11 @@ int main(int argc,char** argv)
   event_action->SetDrawOptical(set->DrawOptical());
   runManager->SetUserAction((G4UserEventAction*)event_action);
 
+  SteppingAction* stepping_action = new SteppingAction();
+  runManager->SetUserAction((G4UserSteppingAction*)stepping_action);
+ 
+  
   // Initialize G4 kernel
-  //
   runManager->Initialize();
   
 

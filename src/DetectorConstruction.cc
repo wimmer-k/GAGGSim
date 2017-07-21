@@ -58,6 +58,10 @@ void DetectorConstruction::DefineMaterials(){
   fGlass->SetMaterialPropertiesTable(fGlassTable);
   fAir->SetMaterialPropertiesTable(fAirTable);
   fVacuum->SetMaterialPropertiesTable(fAirTable);
+
+
+  fCathodeSurf = new G4OpticalSurface("CathodeSurf",glisur,polished,dielectric_metal);
+  fCathodeSurf->SetMaterialPropertiesTable(fCathodeTable);
 }
 void DetectorConstruction::DefineMaterialProperties(){
   fScintTable = new G4MaterialPropertiesTable();
@@ -147,6 +151,30 @@ void DetectorConstruction::DefineMaterialProperties(){
     airrefraction.ignore(1000,'\n');
   }
   fAirTable->AddProperty("RINDEX",airenergies, airRindex,Nairrefraction);
+
+
+  fCathodeTable = new G4MaterialPropertiesTable();
+  ifstream cathoderefraction;
+  cathoderefraction.open(fset->CathodeRefractionFile());
+  if(!cathoderefraction.is_open())
+    cout << "error" << endl;
+  G4int Ncathoderefraction = 0;
+  cathoderefraction >> Ncathoderefraction;
+  cathoderefraction.ignore(1000,'\n');
+  cathoderefraction.ignore(1000,'\n');
+  G4double cathodeenergies[MAXENTRIES];
+  G4double cathodeRindexRe[MAXENTRIES];
+  G4double cathodeRindexIm[MAXENTRIES];
+  G4double cathodeEfficiency[MAXENTRIES];
+  for(int i=0;i<Ncathoderefraction;i++){
+    cathoderefraction >> cathodeenergies[i] >> cathodeRindexRe[i] >> cathodeRindexIm[i] >> cathodeEfficiency[i];
+    cathodeenergies[i]*=eV;
+    cathoderefraction.ignore(1000,'\n');
+  }
+  
+  fCathodeTable->AddProperty("EFFICIENCY",cathodeenergies, cathodeEfficiency,Ncathoderefraction);
+  fCathodeTable->AddProperty("REALRINDEX",cathodeenergies, cathodeRindexRe,Ncathoderefraction);
+  fCathodeTable->AddProperty("IMAGINARYRINDEX",cathodeenergies, cathodeRindexIm,Ncathoderefraction);
   
 }
 
@@ -202,14 +230,21 @@ G4VPhysicalVolume* DetectorConstruction::Construct(){
   G4VPhysicalVolume* cathode_phys = new G4PVPlacement(NULL,G4ThreeVector(fset->ScintPositionX(),fset->ScintPositionY(),fset->ScintPositionZ()-fset->CathodeDepth()*mm/2-fset->ScintDepth()*mm/2),cathode_log,"cathode_phys",experimentalHall_log,false,0);
 
 
+  new G4LogicalSkinSurface("cathode_surface",cathode_log,fCathodeSurf);
+
+  
   //manager for sensistive detectors
   G4SDManager* SDman = G4SDManager::GetSDMpointer();
 
   
   // -----creating sensisitve detectors and adding them to the sensitive detector manager
-  SensitiveDetector* sensitive_detector = new SensitiveDetector("scint");
-  SDman->AddNewDetector(sensitive_detector);
-  detector_log->SetSensitiveDetector(sensitive_detector);
+  ScintSD* sensitive_scint = new ScintSD("scint");
+  SDman->AddNewDetector(sensitive_scint);
+  detector_log->SetSensitiveDetector(sensitive_scint);
+
+  CathodeSD* sensitive_cathode = new CathodeSD("cathode");
+  SDman->AddNewDetector(sensitive_cathode);
+  cathode_log->SetSensitiveDetector(sensitive_cathode);
 
   return experimentalHall_phys;
 }

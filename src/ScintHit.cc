@@ -6,7 +6,7 @@
 
 #include "ScintHit.hh"
 
-G4Allocator<ScintHit> HitAllocator;
+G4Allocator<ScintHit> ScintHitAllocator;
 
 ScintHit::ScintHit()
   :trackID(0), edep(0), pos(0), posindet(0)

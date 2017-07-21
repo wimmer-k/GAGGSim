@@ -70,6 +70,7 @@ public:
   double PMTThick(){return  fPMTwt;}
   const char* GlassRefractionFile(){return fGlassRefractionFile.c_str();}
   const char* AirRefractionFile(){return fAirRefractionFile.c_str();}
+  const char* CathodeRefractionFile(){return fCathodeRefractionFile.c_str();}
 
   double CathodeDepth(){return  fCathodeZ;}
   
@@ -111,6 +112,7 @@ protected:
   double fPMTwt;
   string fGlassRefractionFile;
   string fAirRefractionFile;
+  string fCathodeRefractionFile;
 
   double fCathodeZ;
 };

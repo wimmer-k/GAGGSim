@@ -4,8 +4,8 @@
  *
  ***********************************************************************/
 
-#ifndef SensitiveDetector_h
-#define SensitiveDetector_h 1
+#ifndef CathodeSD_h
+#define CathodeSD_h 1
 
 #include "G4VSensitiveDetector.hh"
 
@@ -16,30 +16,33 @@
 #include "G4ios.hh"
 #include "G4UnitsTable.hh"
 #include "G4VProcess.hh"
+#include "G4ParticleTypes.hh"
+#include "G4ParticleDefinition.hh"
 
 #include <string>
 #include <iostream>
 #include <iomanip>
 
 #include "DetectorConstruction.hh"
-#include "ScintHit.hh"
+#include "CathodeHit.hh"
 
 class G4Step;
 class G4HCofThisEvent;
 
-class SensitiveDetector : public G4VSensitiveDetector
+class CathodeSD : public G4VSensitiveDetector
 {
 
 public:
-  SensitiveDetector(G4String);
-  ~SensitiveDetector();
+  CathodeSD(G4String);
+  ~CathodeSD();
   
   void Initialize(G4HCofThisEvent*);
   G4bool ProcessHits(G4Step*, G4TouchableHistory*);
+  G4bool ProcessSteps(const G4Step* aStep, G4TouchableHistory*);
   void EndOfEvent(G4HCofThisEvent*);
   
 private:
-  HitsCollection* hitsCollection;
+  CathodeHitsCollection* CathodehitsCollection;
   G4String name;
 };
 

@@ -8,7 +8,7 @@ Settings::Settings(){
 Settings::Settings(const char* filename){
   SetFile( filename );
   ReadSettings();
-  if(fVerboseLevel>1)
+  if(fVerboseLevel>0)
     PrintSettings();
 }
 Settings::~Settings(){
@@ -47,6 +47,7 @@ void Settings::ReadSettings(){
 
   fGlassRefractionFile = set->GetValue("Glass.Refraction.File","nofile");
   fAirRefractionFile = set->GetValue("Air.Refraction.File","nofile");
+  fCathodeRefractionFile = set->GetValue("Cathode.Refraction.File","nofile");
 
   fCathodeZ = set->GetValue("Cathode.Depth",1.0);
 
@@ -114,5 +115,6 @@ void Settings::PrintSettings(){
  cout << "PMT.Thick\t"  << fPMTwt << endl;
 
  cout << "Cathode.Depth\t" << fCathodeZ << endl;
+ cout << "Cathode.Refraction.File\t" << fCathodeRefractionFile << endl;
  
 }

@@ -4,30 +4,30 @@
  *
  ***********************************************************************/
 
-#include "SensitiveDetector.hh"
+#include "ScintSD.hh"
 
 using namespace std;
-SensitiveDetector::SensitiveDetector(G4String iname)
+ScintSD::ScintSD(G4String iname)
   : G4VSensitiveDetector(iname)
 {
   collectionName.insert(iname);
 }
 
-SensitiveDetector::~SensitiveDetector(){;}
+ScintSD::~ScintSD(){;}
 
-void SensitiveDetector::Initialize(G4HCofThisEvent* evnt){
+void ScintSD::Initialize(G4HCofThisEvent* evnt){
   
   //cout << __PRETTY_FUNCTION__ << "\t" << SensitiveDetectorName <<"\t";
   static G4int HCID;
   HCID = G4SDManager::GetSDMpointer()->GetCollectionID(SensitiveDetectorName);
   //cout << "HCID " << HCID << endl;
-  hitsCollection = new HitsCollection(SensitiveDetectorName,SensitiveDetectorName);
+  ScinthitsCollection = new ScintHitsCollection(SensitiveDetectorName,SensitiveDetectorName);
 
-  evnt->AddHitsCollection(HCID, hitsCollection);
+  evnt->AddHitsCollection(HCID, ScinthitsCollection);
   //cout << "added " << endl;
 }
 
-G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*){
+G4bool ScintSD::ProcessHits(G4Step* aStep, G4TouchableHistory*){
   //cout << __PRETTY_FUNCTION__ << endl;
 
   G4SDManager* SDman = G4SDManager::GetSDMpointer();
@@ -36,8 +36,8 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*){
   G4double edep = aStep->GetTotalEnergyDeposit();
   //cout << "edep " << edep << endl;
   if(edep==0)
-    return true;
-
+    return false;
+  //cout << "edep " << edep << endl;
   ScintHit* newHit = new ScintHit();
 
   newHit->SetTrackID(aStep->GetTrack()->GetTrackID());
@@ -60,10 +60,9 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*){
   newHit->SetPosInDet(det_position);
 
   //check which HitCollectionID this is
-  //cout << "checking collection id entries " <<hitsCollection->entries() << endl;
-  int CollectionID = SDman->GetCollectionID(hitsCollection);
+  //cout << "checking collection id entries " <<ScinthitsCollection->entries() << endl;
+  int CollectionID = SDman->GetCollectionID(ScinthitsCollection);
   //cout << "collection id " << CollectionID << endl;
-  // CollectionID -= SDman->GetCollectionID("crystal_0");
   
   newHit->SetID(CollectionID);
  
@@ -83,13 +82,13 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*){
       newHit->SetVolume("OutOfWorld");
     }
 
-  hitsCollection->insert(newHit);
+  ScinthitsCollection->insert(newHit);
   
 
   return true;
 }
 
-void SensitiveDetector::EndOfEvent(G4HCofThisEvent*)
+void ScintSD::EndOfEvent(G4HCofThisEvent*)
 {;}
 
 

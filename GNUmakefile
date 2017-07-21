@@ -13,6 +13,9 @@ EXTRA_INCLUDES = -I./ -I./include -I$(COMMON_DIR)
 .PHONY: all
 all: lib bin
 
+cleanup:
+	rm -f *~ include/*~ src/*~
+
 include $(G4INSTALL)/config/architecture.gmk
 
 CPPFLAGS += $(shell $(ROOTSYS)/bin/root-config --cflags) $(EXTRA_INCLUDES)
@@ -23,5 +26,3 @@ EXTRALIBS = -L$(LIB_DIR) -lCommandLineInterface
 
 include $(G4INSTALL)/config/binmake.gmk
 
-cleanup:
-	rm -f *~ include/*~ src/*~

@@ -20,8 +20,12 @@ class G4VPhysicalVolume;
 #include "G4NistManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4LogicalSkinSurface.hh"
+#include "G4LogicalBorderSurface.hh"
+#include "G4OpticalSurface.hh"
 
-#include "SensitiveDetector.hh"
+#include "ScintSD.hh"
+#include "CathodeSD.hh"
 #include "Settings.hh"
 
 #include <iostream>
@@ -56,8 +60,10 @@ private:
   G4Material* fGlass;
   G4Material* fCathode;
   G4Material* fScint;
+  G4OpticalSurface* fCathodeSurf;
   
   G4MaterialPropertiesTable* fScintTable;
+  G4MaterialPropertiesTable* fCathodeTable;
   G4MaterialPropertiesTable* fGlassTable;
   G4MaterialPropertiesTable* fAirTable;
   

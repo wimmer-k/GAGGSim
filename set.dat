@@ -1,5 +1,5 @@
 VerboseLevel:		1
-DrawOptical:		1000 #0 all trajectories, -1 no trajectory, N every Nth
+DrawOptical:		-1 #1000 #0 all trajectories, -1 no trajectory, N every Nth
 
 Gamma.Energy:		2000	#keV
 Gamma.Direction:	2
@@ -30,10 +30,11 @@ PMT.Width:		82.5	#mm y
 PMT.Depth:		151	#mm z
 PMT.Thick:		1	#mm wall thickness
 #glass properties
-Glass.Refraction.File	/home/wimmer/geant/GAGG/settings/glassrefraction.dat
-Air.Refraction.File	/home/wimmer/geant/GAGG/settings/airrefraction.dat
+Glass.Refraction.File:	/home/wimmer/geant/GAGG/settings/glassrefraction.dat
+Air.Refraction.File:	/home/wimmer/geant/GAGG/settings/airrefraction.dat
 
 #cathode
 Cathode.Depth:		1	#mm
+Cathode.Refraction.File:	/home/wimmer/geant/GAGG/settings/cathoderefraction.dat
 
 
