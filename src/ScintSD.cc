@@ -35,7 +35,7 @@ G4bool ScintSD::ProcessHits(G4Step* aStep, G4TouchableHistory*){
 
   G4double edep = aStep->GetTotalEnergyDeposit();
   //cout << "edep " << edep << endl;
-  if(edep==0)
+  if(edep==0 || aStep->GetTrack()->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition())
     return false;
   //cout << "edep " << edep << endl;
   ScintHit* newHit = new ScintHit();

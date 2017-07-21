@@ -1,11 +1,4 @@
 2	#number of lines
-#energy eV	rind RE	rind IM	Efficiency
+#energy eV	rindRE	rindIM	Efficiency
 2.0		1.92	1.69 	1.0
 7.0		1.92	1.69	1.0
-
-
-
-
-
-
- 

@@ -5,3 +5,6 @@ settings/*~
 test.root
 vis.root
 test.txt
+*.log
+*.pdf
+*.ps
