@@ -7,4 +7,5 @@ vis.root
 test.txt
 *.log
 *.pdf
+*.eps
 *.ps
