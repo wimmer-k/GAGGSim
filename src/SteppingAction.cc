@@ -30,6 +30,7 @@ void SteppingAction::UserSteppingAction(const G4Step * theStep){
       if((*pv)[i]->GetProcessName()=="OpBoundary"){
         boundary = (G4OpBoundaryProcess*)(*pv)[i];
 	//cout << "found boundary " << endl;
+	//cout << "thePrePV->GetName() " << thePrePV->GetName() << ", thePostPV->GetName() " << thePostPV->GetName() << endl;
         break;
       }
     }
@@ -116,3 +117,19 @@ void SteppingAction::UserSteppingAction(const G4Step * theStep){
     }
   }
 }
+/*
+0	Undefined 	
+1	FresnelRefraction 	
+2	FresnelReflection 	
+3	TotalInternalReflection 	
+4	LambertianReflection 	
+5	LobeReflection 	
+6	SpikeReflection 	
+7	BackScattering 	
+8	Absorption 	
+9	Detection 	
+10	NotAtBoundary 	
+11	SameMaterial 	
+12	StepTooSmall 	
+13	NoRINDEX 
+*/

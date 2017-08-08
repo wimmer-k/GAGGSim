@@ -10,6 +10,7 @@ class DataManager;
 #include <TObject.h>
 #include <TFile.h>
 #include <TTree.h>
+#include <TVector3.h>
 
 
 class DataManager{
@@ -18,7 +19,10 @@ public:
   DataManager(const char* filename, int nevents);
   ~DataManager();
   void Init(const char* filename);
-  void SetEsim(double e);
+  void SetEsim(double e){fesim = e;};
+  void SetFirstHit(double e, TVector3 p){ffire = e; ffirp = p;};
+  void SetMaxHit(double e, TVector3 p){fmaxe = e; fmaxp = p;};
+  void SetAverageHit(double e, TVector3 p){favee = e; favep = p;};
   void FillTree(double en, int npho=0);
   void Clear(const Option_t* option="");
   void Close();
@@ -29,6 +33,14 @@ private:
   double fesim;
   double fedep;
   int    fnpho;
+
+  double ffire;
+  double fmaxe;
+  double favee;
+  TVector3 ffirp;
+  TVector3 fmaxp;
+  TVector3 favep;
+  
   TTree* ftree;
   TFile* ffile;
 };

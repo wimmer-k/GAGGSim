@@ -69,7 +69,9 @@ void ScintHit::Draw()
 void ScintHit::Print()
 {
   G4cout << " Scint: " << G4endl;
-  G4cout << "  trackID: " << trackID 
+  G4cout << "  trackID: " << trackID
+	 << "  parentID: " << parentID 
+	 << "  ID: " << ID 
          << "  energy deposit: " << G4BestUnit(edep,"Energy")
 	 << "  position: " << G4BestUnit(pos,"Length") << G4endl;
 }

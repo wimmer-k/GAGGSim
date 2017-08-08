@@ -68,18 +68,40 @@ void EventAction::EndOfEventAction(const G4Event* evt){
   }
   // temporary storage for the deposited energy, and number of photons
   G4double en = 0;
+  G4double firsten = 0;
+  G4double maxen = 0;
+  G4double averageen = 0;
+  TVector3 firstpos(sqrt(-1),sqrt(-1),sqrt(-1));
+  TVector3 maxpos(sqrt(-1),sqrt(-1),sqrt(-1));
+  TVector3 averagepos(0,0,0);
+  
   G4int npho = 0;
-
+  
   //Hits in scintillator
   if(scintHC){
     
     // loop over all the hits in this crystal
     for(int j=0;j<scintHC->entries();j++){
       //cout << (*scintHC)[j]->GetEdep()*MeV << "\t"<< (*scintHC)[j]->GetEdep()*keV << "\t"<< (*scintHC)[j]->GetEdep() << endl;
-      en += (*scintHC)[j]->GetEdep()*1000;
+      //(*scintHC)[j]->Print();
+      double edep = (*scintHC)[j]->GetEdep()*1000;
+      en += edep;
+      averagepos += TVector3((*scintHC)[j]->GetPos().x(),(*scintHC)[j]->GetPos().y(),(*scintHC)[j]->GetPos().z());
+      if((*scintHC)[j]->GetTrackID() == 1){//first hit
+	firstpos.SetXYZ((*scintHC)[j]->GetPos().x(),(*scintHC)[j]->GetPos().y(),(*scintHC)[j]->GetPos().z());
+	firsten = edep;
+      }
+      if(edep>maxen){//highest hit
+	maxpos.SetXYZ((*scintHC)[j]->GetPos().x(),(*scintHC)[j]->GetPos().y(),(*scintHC)[j]->GetPos().z());
+	maxen = edep;
+      }
+      
     }//loop over all hits
-    //maybe calculate the average position?
+    //calculate average position
+    averagepos *= 1./scintHC->entries();
+    averageen = en/scintHC->entries();
   }
+  
   //hits in cathode
   if(cathodeHC){
     if(cathodeHC->entries()>1){
@@ -92,6 +114,9 @@ void EventAction::EndOfEventAction(const G4Event* evt){
     }
   }
 
+  fdata->SetMaxHit(maxen,maxpos);
+  fdata->SetFirstHit(firsten,firstpos);
+  fdata->SetAverageHit(averageen,averagepos);
   // fill the tree in the datamanager object, this saves the event to the ouput file
   fdata->FillTree(en,npho);
 

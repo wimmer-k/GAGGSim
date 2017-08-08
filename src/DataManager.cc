@@ -13,16 +13,22 @@ DataManager::DataManager(const char* filename, int nevents){
   ftree = new TTree("str","simulation data");
   ftree->Branch("esim",&fesim,"esim/D");
   ftree->Branch("edep",&fedep,"edep/D");
-  ftree->Branch("npho",&fnpho,"npho/I");
+  ftree->Branch("nphotons",&fnpho,"npho/I");
+
+  ftree->Branch("efirst",  &ffire,"efir/D");
+  ftree->Branch("emax",    &fmaxe,"emax/D");
+  ftree->Branch("eaverage",&favee,"eave/D");
+  
+  ftree->Branch("pfirst",  &ffirp);
+  ftree->Branch("pmax",    &fmaxp);
+  ftree->Branch("paverage",&favep);
+
   ftree->BranchRef();
 }
 DataManager::~DataManager(){
   this->Close();
   delete ftree;
   delete ffile;
-}
-void DataManager::SetEsim(double e){
-  fesim = e;
 }
 void DataManager::FillTree(double en, int npho){
   fedep = en;

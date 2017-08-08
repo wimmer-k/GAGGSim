@@ -1,6 +1,8 @@
+rootfiles
 *~
 include/*~
 src/*~
+scripts/*~
 settings/*~
 test.root
 vis.root
@@ -9,3 +11,4 @@ test.txt
 *.pdf
 *.eps
 *.ps
+.DAWN*
