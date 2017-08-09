@@ -21,24 +21,25 @@
 #include "EventAction.hh"
 #include "Trajectory.hh"
 #include "CathodeSD.hh"
+#include "DataManager.hh"
 
 class EventAction;
 
-class SteppingAction : public G4UserSteppingAction
-{
-  public:
-
-    SteppingAction();
-    virtual ~SteppingAction();
-    virtual void UserSteppingAction(const G4Step*);
-
-    void SetOneStepPrimaries(G4bool b){fOneStepPrimaries=b;}
-    G4bool GetOneStepPrimaries(){return fOneStepPrimaries;}
- 
-  private:
-
-    G4bool fOneStepPrimaries;
-    G4OpBoundaryProcessStatus fExpectedNextStatus;
+class SteppingAction : public G4UserSteppingAction{
+public:
+  
+  SteppingAction(DataManager* data);
+  virtual ~SteppingAction();
+  virtual void UserSteppingAction(const G4Step*);
+  
+  void SetOneStepPrimaries(G4bool b){fOneStepPrimaries=b;}
+  G4bool GetOneStepPrimaries(){return fOneStepPrimaries;}
+  
+private:
+  
+  G4bool fOneStepPrimaries;
+  G4OpBoundaryProcessStatus fExpectedNextStatus;
+  DataManager* fdata;
 };
 
 #endif

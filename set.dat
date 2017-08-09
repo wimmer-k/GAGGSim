@@ -1,4 +1,4 @@
-VerboseLevel:		1
+VerboseLevel:		0
 DrawOptical:		1000 #1000 #0 all trajectories, -1 no trajectory, N every Nth
 
 Gamma.Energy:		2000	#keV
@@ -17,17 +17,17 @@ Scint.Position.Y:	0  #mm
 Scint.Position.Z:	0  #mm
 
 #scintillator dimensions
-Scint.Height:		82.5	#mm x 
-Scint.Width:		82.5	#mm y 
-Scint.Depth:		51	#mm z
+Scint.Height:		25.	#mm x 
+Scint.Width:		25.	#mm y 
+Scint.Depth:		100.	#mm z
 
 #crystal properties
-Scint.Properties:	/home/wimmer/geant/GAGG/scintproperties.dat
+Scint.Properties:	/home/wimmer/geant/GAGG/settings/scintproperties.dat
 
 #pmt dimensions
-PMT.Height:		82.5	#mm x 
-PMT.Width:		82.5	#mm y 
-PMT.Depth:		151	#mm z
+PMT.Height:		25.	#mm x 
+PMT.Width:		25.	#mm y 
+PMT.Depth:		50.	#mm z
 PMT.Thick:		1	#mm wall thickness
 #glass properties
 Glass.Refraction.File:	/home/wimmer/geant/GAGG/settings/glassrefraction.dat

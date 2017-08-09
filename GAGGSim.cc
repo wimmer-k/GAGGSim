@@ -33,7 +33,7 @@ int main(int argc,char** argv)
   char* rootFile = NULL;
   char* setFile = NULL;
   int nevents = 0;
-  int vlevel = 0;
+  int vlevel = -1;
   bool vis = false;
   CommandLineInterface* interface = new CommandLineInterface();
   interface->Add("-n", "number of events", &nevents);
@@ -63,9 +63,10 @@ int main(int argc,char** argv)
   }
 
   Settings* set = new Settings(setFile);
-  set->SetVerboseLevel(vlevel);
+  if(vlevel>-1)
+    set->SetVerboseLevel(vlevel);
   
-  DataManager* data = new DataManager(rootFile,nevents);
+  DataManager* data = new DataManager(rootFile,nevents,set->VLevel());
 
   // choose the Random engine
   HepRandom::setTheEngine(new RanecuEngine);
@@ -92,7 +93,7 @@ int main(int argc,char** argv)
   event_action->SetDrawOptical(set->DrawOptical());
   runManager->SetUserAction((G4UserEventAction*)event_action);
 
-  SteppingAction* stepping_action = new SteppingAction();
+  SteppingAction* stepping_action = new SteppingAction(data);
   runManager->SetUserAction((G4UserSteppingAction*)stepping_action);
  
   

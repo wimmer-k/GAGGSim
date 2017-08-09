@@ -1,5 +1,7 @@
 #include "SteppingAction.hh"
-SteppingAction::SteppingAction() : fOneStepPrimaries(false){
+SteppingAction::SteppingAction(DataManager* data) : fOneStepPrimaries(false){
+  // store the pointer to the data class locally, in order to be able to acess all information later
+  fdata = data;
   fExpectedNextStatus = Undefined;
 }
 SteppingAction::~SteppingAction() {}
@@ -35,16 +37,19 @@ void SteppingAction::UserSteppingAction(const G4Step * theStep){
       }
     }
   }
+  G4ParticleDefinition* particleType = theTrack->GetDefinition();
 
+  //count scintillation photons
+  if(theTrack->GetParentID()>=0){
+    if(particleType==G4OpticalPhoton::OpticalPhotonDefinition()){
+      //cout << "processname " << thePostPoint->GetProcessDefinedStep()->GetProcessName() << endl;
+      if(theTrack->GetCreatorProcess()->GetProcessName() == "Scintillation"){
+	fdata->AddCreatedPhoton();
+      }
+    }
+  }
   if(theTrack->GetParentID()==0){
-    //This is a primary track
- 
-    G4TrackVector* fSecondary=fpSteppingManager->GetfSecondary();
-    G4int tN2ndariesTot = fpSteppingManager->GetfN2ndariesAtRestDoIt()
-      + fpSteppingManager->GetfN2ndariesAlongStepDoIt()
-      + fpSteppingManager->GetfN2ndariesPostStepDoIt();
-
- 
+    //This is a primary track 
     if(fOneStepPrimaries&&thePrePV->GetName()=="scint")
       theTrack->SetTrackStatus(fStopAndKill);
   }
@@ -55,7 +60,6 @@ void SteppingAction::UserSteppingAction(const G4Step * theStep){
   }
   if(!boundary)
     return;
-  G4ParticleDefinition* particleType = theTrack->GetDefinition();
   if(particleType==G4OpticalPhoton::OpticalPhotonDefinition()){
     //Optical photon only
     boundaryStatus=boundary->GetStatus();
@@ -78,29 +82,36 @@ void SteppingAction::UserSteppingAction(const G4Step * theStep){
       fExpectedNextStatus=Undefined;
       //cout << "boundaryStatus " << boundaryStatus <<"\t";
       switch(boundaryStatus){
-      case Absorption:{
+      case Absorption:
         break;
+      case Detection:{
+	//Note, this assumes that the volume causing detection is the photocathode because it is the only one with non-zero efficiency
+	//Triger sensitive detector manually since photon is
+	//absorbed but status was Detection
+	G4SDManager* SDman = G4SDManager::GetSDMpointer();
+	CathodeSD* cathode = (CathodeSD*)SDman->FindSensitiveDetector("cathode");
+	//cout << "detection " << endl;
+	if(cathode)
+	  cathode->ProcessSteps(theStep,NULL);
+	break;
       }
-      case Detection: //Note, this assumes that the volume causing detection
-                      //is the photocathode because it is the only one with
-                      //non-zero efficiency
-        {
-	  //Triger sensitive detector manually since photon is
-	  //absorbed but status was Detection
-	  G4SDManager* SDman = G4SDManager::GetSDMpointer();
-	  CathodeSD* cathode = (CathodeSD*)SDman->FindSensitiveDetector("cathode");
-	  //cout << "detection " << endl;
-	  if(cathode)
-	    cathode->ProcessSteps(theStep,NULL);
-	  break;
-        }
+      case FresnelReflection:
+	fdata->AddReflection();
+	break;
+      case LambertianReflection:
+	fdata->AddReflection();
+	break;
+      case LobeReflection:
+	fdata->AddReflection();
+	break;
+      case SpikeReflection:
+	fdata->AddReflection();
+	break;
+      case TotalInternalReflection:
+	fdata->AddReflection();
+	break;
       case Undefined:
       case FresnelRefraction:
-      case FresnelReflection:
-      case LambertianReflection:
-      case LobeReflection:
-      case SpikeReflection:
-      case TotalInternalReflection:
       case StepTooSmall:
       case SameMaterial:
       case NotAtBoundary:
