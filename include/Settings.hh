@@ -68,11 +68,15 @@ public:
   double PMTHeight(){return fPMTY;}
   double PMTWidth(){return  fPMTX;}
   double PMTThick(){return  fPMTwt;}
+
+  double WrapThick(){return fWrapwt;}
+  const char* WrapReflectivityFile(){return fWrapReflectivityFile.c_str();}
+
   const char* GlassRefractionFile(){return fGlassRefractionFile.c_str();}
   const char* AirRefractionFile(){return fAirRefractionFile.c_str();}
-  const char* CathodeRefractionFile(){return fCathodeRefractionFile.c_str();}
 
   double CathodeDepth(){return  fCathodeZ;}
+  const char* CathodeRefractionFile(){return fCathodeRefractionFile.c_str();}
   
 protected:
   int fVerboseLevel;
@@ -110,9 +114,11 @@ protected:
   double fPMTY;
   double fPMTX;
   double fPMTwt;
+  double fWrapwt;
   string fGlassRefractionFile;
   string fAirRefractionFile;
   string fCathodeRefractionFile;
+  string fWrapReflectivityFile;
 
   double fCathodeZ;
 };

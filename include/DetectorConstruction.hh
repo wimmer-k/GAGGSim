@@ -60,11 +60,14 @@ private:
   G4Material* fGlass;
   G4Material* fCathode;
   G4Material* fScint;
+  G4Material* fWrap;
   G4OpticalSurface* fCathodeSurf;
+  G4OpticalSurface* fWrapSurf;
   
   G4MaterialPropertiesTable* fScintTable;
   G4MaterialPropertiesTable* fCathodeTable;
   G4MaterialPropertiesTable* fGlassTable;
+  G4MaterialPropertiesTable* fWrapTable;
   G4MaterialPropertiesTable* fAirTable;
   
   

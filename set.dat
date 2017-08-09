@@ -1,5 +1,5 @@
 VerboseLevel:		1
-DrawOptical:		-1 #1000 #0 all trajectories, -1 no trajectory, N every Nth
+DrawOptical:		1000 #1000 #0 all trajectories, -1 no trajectory, N every Nth
 
 Gamma.Energy:		2000	#keV
 Gamma.Direction:	2
@@ -38,3 +38,6 @@ Cathode.Depth:		1	#mm
 Cathode.Refraction.File:	/home/wimmer/geant/GAGG/settings/cathoderefraction.dat
 
 
+#wrapping
+Wrap.Thick:		0.1	#mm wall thickness
+Wrap.Reflectivity.File:	/home/wimmer/geant/GAGG/settings/wrapreflectivity.dat

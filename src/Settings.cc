@@ -45,9 +45,13 @@ void Settings::ReadSettings(){
   fPMTX = set->GetValue("PMT.Width",82.5);
   fPMTwt = set->GetValue("PMT.Thick",1.);
 
+  fWrapwt = set->GetValue("Wrap.Thick", -1.);
+
+  
   fGlassRefractionFile = set->GetValue("Glass.Refraction.File","nofile");
   fAirRefractionFile = set->GetValue("Air.Refraction.File","nofile");
   fCathodeRefractionFile = set->GetValue("Cathode.Refraction.File","nofile");
+  fWrapReflectivityFile = set->GetValue("Wrap.Reflectivity.File","nofile");
 
   fCathodeZ = set->GetValue("Cathode.Depth",1.0);
 
@@ -92,6 +96,7 @@ void Settings::PrintSettings(){
  cout << "Scint.Depth\t"  << fScintZ << endl;
  cout << "Scint.Height\t" << fScintY << endl;
  cout << "Scint.Width\t"  << fScintX << endl;
+ cout << "Wrap.Thick\t"   << fWrapwt << endl;
 
  if(fScintProperties.compare("nofile"))
    cout << "Scint.Properties\t"  << fScintProperties << endl;
@@ -117,4 +122,5 @@ void Settings::PrintSettings(){
  cout << "Cathode.Depth\t" << fCathodeZ << endl;
  cout << "Cathode.Refraction.File\t" << fCathodeRefractionFile << endl;
  
+ cout << "Wrap.Reflectivity.File\t" << fWrapReflectivityFile <<endl;
 }

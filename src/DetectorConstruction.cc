@@ -38,6 +38,14 @@ void DetectorConstruction::DefineMaterials(){
   fScint->AddElement(Ga, 0.15);
   fScint->AddElement(O, 0.6);
 
+  //Wrapping Teflon (C2F4)
+  density = 0.8*g/cm3; 
+  G4Element* C=NistManager->FindOrBuildElement("C");
+  G4Element* F=NistManager->FindOrBuildElement("F");
+  fWrap = new G4Material("Wrap", density, 2);
+  fWrap->AddElement(C,0.33);
+  fWrap->AddElement(F,0.67);
+
   //Glass: SiO2 + B2O3
   density=2.23*g/cm3;
   G4Element* Si = NistManager->FindOrBuildElement("Si");
@@ -59,9 +67,14 @@ void DetectorConstruction::DefineMaterials(){
   fAir->SetMaterialPropertiesTable(fAirTable);
   fVacuum->SetMaterialPropertiesTable(fAirTable);
 
-
   fCathodeSurf = new G4OpticalSurface("CathodeSurf",glisur,polished,dielectric_metal);
   fCathodeSurf->SetMaterialPropertiesTable(fCathodeTable);
+
+  fWrapSurf = new G4OpticalSurface("WrapSurf",glisur,ground,dielectric_metal);
+  G4double polish = 0.0;
+  fWrapSurf->SetPolish(polish);
+  fWrapSurf->SetMaterialPropertiesTable(fWrapTable);
+  
 }
 void DetectorConstruction::DefineMaterialProperties(){
   fScintTable = new G4MaterialPropertiesTable();
@@ -152,7 +165,6 @@ void DetectorConstruction::DefineMaterialProperties(){
   }
   fAirTable->AddProperty("RINDEX",airenergies, airRindex,Nairrefraction);
 
-
   fCathodeTable = new G4MaterialPropertiesTable();
   ifstream cathoderefraction;
   cathoderefraction.open(fset->CathodeRefractionFile());
@@ -170,12 +182,33 @@ void DetectorConstruction::DefineMaterialProperties(){
     cathoderefraction >> cathodeenergies[i] >> cathodeRindexRe[i] >> cathodeRindexIm[i] >> cathodeEfficiency[i];
     cathodeenergies[i]*=eV;
     cathoderefraction.ignore(1000,'\n');
-  }
-  
+  }  
   fCathodeTable->AddProperty("EFFICIENCY",cathodeenergies, cathodeEfficiency,Ncathoderefraction);
   fCathodeTable->AddProperty("REALRINDEX",cathodeenergies, cathodeRindexRe,Ncathoderefraction);
   fCathodeTable->AddProperty("IMAGINARYRINDEX",cathodeenergies, cathodeRindexIm,Ncathoderefraction);
-  
+
+
+  fWrapTable = new G4MaterialPropertiesTable();
+  ifstream wrapreflectivity;
+  wrapreflectivity.open(fset->WrapReflectivityFile());
+  if(!wrapreflectivity.is_open())
+    cout << "error" << endl;
+  G4int Nwrapreflectivity = 0;
+  wrapreflectivity >> Nwrapreflectivity;
+  wrapreflectivity.ignore(1000,'\n');
+  wrapreflectivity.ignore(1000,'\n');
+  G4double wrapenergies[MAXENTRIES]; //wrap energies;
+  G4double wrapReflect[MAXENTRIES]; //wrap reflectivity;
+  G4double wrapTransmit[MAXENTRIES]; //wrap transmittance;
+  for(int i=0;i<Nwrapreflectivity;i++){
+    wrapreflectivity >> wrapenergies[i] >> wrapReflect[i] >> wrapTransmit[i];
+    wrapreflectivity.ignore(1000,'\n');
+    //cout << PhotonEnergy[i] << "\t" << reflect[i] << "\t" << transmit[i] << endl;
+  }
+
+  fWrapTable->AddProperty("REFLECTIVITY", wrapenergies, wrapReflect, Nwrapreflectivity);
+  fWrapTable->AddProperty("TRANSMITTANCE", wrapenergies, wrapTransmit, Nwrapreflectivity);
+ 
 }
 
 G4VPhysicalVolume* DetectorConstruction::Construct(){
@@ -184,10 +217,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct(){
 
 #ifdef G4VIS_USE
   // usefull colors
-  G4VisAttributes* HallVisAtt = new G4VisAttributes(false,G4Colour(0.,1.,0.));
+  G4VisAttributes* HallVisAtt     = new G4VisAttributes(false,G4Colour(0.,1.,0.));
   G4VisAttributes* detectorVisAtt = new G4VisAttributes(true,G4Colour(0.89,0.45,0.13));
   G4VisAttributes* pmtVisAtt      = new G4VisAttributes(true,G4Colour(0.49,0.85,0.13));
   G4VisAttributes* cathodeVisAtt  = new G4VisAttributes(true,G4Colour(0.49,0.45,0.63));
+  G4VisAttributes* wrapVisAtt     = new G4VisAttributes(true,G4Colour(0.5,0.,0.5));
 #endif
 
   //------------------------------ experimental hall (world volume)
@@ -211,6 +245,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct(){
 #endif      
   G4VPhysicalVolume* detector_phys = new G4PVPlacement(NULL,G4ThreeVector(fset->ScintPositionX(),fset->ScintPositionY(),fset->ScintPositionZ()),detector_log,"detector_phys",experimentalHall_log,false,0);
 
+  //Wrapping
+  G4Box* wrap_box1 = new G4Box("wrap_box1", fset->ScintHeight()*mm/2+fset->WrapThick(), fset->ScintWidth()*mm/2+fset->WrapThick(),fset->ScintDepth()*mm/2+fset->WrapThick());
+  
+  G4Box* wrap_box2 = new G4Box("wrap_box2", fset->ScintHeight()*mm/2,fset->ScintWidth()*mm/2,fset->ScintDepth()*mm/2+fset->WrapThick());
+
+  G4SubtractionSolid* Wrap = new G4SubtractionSolid("Wrap", wrap_box1, wrap_box2,NULL, G4ThreeVector(0,0,-fset->WrapThick()*mm));
+  G4LogicalVolume* wrap_log = new G4LogicalVolume(Wrap,fAir, "wrap_log");
+#ifdef G4VIS_USE
+  wrap_log->SetVisAttributes(wrapVisAtt);
+#endif
+  G4VPhysicalVolume* wrap_phys = NULL;
+  if(fset->WrapThick()>0)
+    wrap_phys = new G4PVPlacement(NULL, G4ThreeVector(fset->ScintPositionX(),fset->ScintPositionY(),fset->ScintPositionZ()),wrap_log, "wrap_phys",experimentalHall_log,false,0);
+
   //PMT
   G4Box* pmt_box1= new G4Box("pmt_box1",fset->PMTHeight()*mm/2+fset->PMTThick(),fset->PMTWidth()*mm/2+fset->PMTThick(),fset->PMTDepth()*mm/2);
   G4Box* pmt_box2= new G4Box("pmt_box2",fset->PMTHeight()*mm/2,fset->PMTWidth()*mm/2,fset->PMTDepth()*mm/2);
@@ -231,7 +279,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct(){
 
 
   new G4LogicalSkinSurface("cathode_surface",cathode_log,fCathodeSurf);
-
+  if(fset->WrapThick()>0)
+    new G4LogicalBorderSurface("scint_wrap_surface", detector_phys,wrap_phys,fWrapSurf);
   
   //manager for sensistive detectors
   G4SDManager* SDman = G4SDManager::GetSDMpointer();

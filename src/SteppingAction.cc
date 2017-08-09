@@ -79,7 +79,6 @@ void SteppingAction::UserSteppingAction(const G4Step * theStep){
       //cout << "boundaryStatus " << boundaryStatus <<"\t";
       switch(boundaryStatus){
       case Absorption:{
-	cout << "absorption " << endl;
         break;
       }
       case Detection: //Note, this assumes that the volume causing detection
