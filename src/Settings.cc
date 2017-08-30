@@ -6,10 +6,8 @@ Settings::Settings(){
   cout << "not filename " << endl;
 }
 Settings::Settings(const char* filename){
-  SetFile( filename );
+  SetFile(filename);
   ReadSettings();
-  if(fVerboseLevel>0)
-    PrintSettings();
 }
 Settings::~Settings(){
   cout << "destructor" << endl;

@@ -32,6 +32,7 @@ int main(int argc,char** argv)
 {
   char* rootFile = NULL;
   char* setFile = NULL;
+  double energy = sqrt(-1);
   int nevents = 0;
   int vlevel = -1;
   bool vis = false;
@@ -40,6 +41,7 @@ int main(int argc,char** argv)
   interface->Add("-o", "output root file", &rootFile);
   interface->Add("-s", "settings file", &setFile);
   interface->Add("-v", "verbose level", &vlevel);
+  interface->Add("-e", "energy, overrides settings", &energy);
   interface->Add("-vis", "switch on visualization", &vis);
 
   interface->CheckFlags(argc, argv);
@@ -63,8 +65,13 @@ int main(int argc,char** argv)
   }
 
   Settings* set = new Settings(setFile);
-  if(vlevel>-1)
+  if(!isnan(energy)){
+    set->SetGammaEnergy(energy);
+  }
+  if(vlevel>-1){
     set->SetVerboseLevel(vlevel);
+    set->PrintSettings();
+  }
   
   DataManager* data = new DataManager(rootFile,nevents,set->VLevel());
 

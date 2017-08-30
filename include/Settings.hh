@@ -19,7 +19,7 @@ using namespace std;
 class Settings{
 public:
   Settings();//default ctor
-  Settings(const char*);
+  Settings(const char* file);
   ~Settings();
 
   void ReadSettings();
@@ -30,6 +30,7 @@ public:
   int VLevel(){return fVerboseLevel;}
   int DrawOptical(){return fDrawOptical;}
   void SetVerboseLevel(int vlevel){fVerboseLevel = vlevel;}
+  void SetGammaEnergy(double energy){fGammaEnergy = energy;}
   
   double GammaEnergy(){return fGammaEnergy;}
   double GammaWhite(int i){return fGammaWhite[i];}
