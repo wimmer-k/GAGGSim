@@ -17,7 +17,7 @@ DataManager::DataManager(const char* filename, int nevents, int vlevel){
   ftree->Branch("nphotons",&fnpho,"npho/I");
   
   ftree->Branch("ncreatedphotons",&fcpho,"cpho/I");
-  ftree->Branch("nreflections",&frefl,"refl/I");
+  ftree->Branch("nreflections",&frefl,"refl/l");
 
   ftree->Branch("efirst",  &ffire,"efir/D");
   ftree->Branch("emax",    &fmaxe,"emax/D");
@@ -28,6 +28,7 @@ DataManager::DataManager(const char* filename, int nevents, int vlevel){
   ftree->Branch("paverage",&favep);
 
   ftree->BranchRef();
+  Clear();
 }
 DataManager::~DataManager(){
   this->Close();

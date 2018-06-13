@@ -37,8 +37,8 @@ private:
   double fedep;
   int    fnpho;
 
-  int    fcpho;
-  int    frefl;
+  int       fcpho;
+  ULong64_t frefl;
 
   double ffire;
   double fmaxe;

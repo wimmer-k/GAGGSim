@@ -4,6 +4,7 @@
 #include "PrimaryGeneratorAction.hh"
 #include "EventAction.hh"
 #include "SteppingAction.hh"
+#include "StackingAction.hh"
 #include "ScintSD.hh"
 
 #include "G4RunManager.hh"
@@ -102,6 +103,9 @@ int main(int argc,char** argv)
 
   SteppingAction* stepping_action = new SteppingAction(data);
   runManager->SetUserAction((G4UserSteppingAction*)stepping_action);
+ 
+  StackingAction* stacking_action = new StackingAction(data);
+  runManager->SetUserAction((G4UserStackingAction*)stacking_action);
  
   
   // Initialize G4 kernel

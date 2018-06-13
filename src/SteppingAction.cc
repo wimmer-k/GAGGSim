@@ -38,16 +38,19 @@ void SteppingAction::UserSteppingAction(const G4Step * theStep){
     }
   }
   G4ParticleDefinition* particleType = theTrack->GetDefinition();
-
-  //count scintillation photons
-  if(theTrack->GetParentID()>=0){
-    if(particleType==G4OpticalPhoton::OpticalPhotonDefinition()){
-      //cout << "processname " << thePostPoint->GetProcessDefinedStep()->GetProcessName() << endl;
-      if(theTrack->GetCreatorProcess()->GetProcessName() == "Scintillation"){
-	fdata->AddCreatedPhoton();
-      }
-    }
-  }
+  // if(theTrack->GetParentID()>=0){
+  //   cout << "ParentID " << theTrack->GetParentID();
+  //   cout << ", particleType " << particleType->GetParticleName();
+  //   cout << ", step process " << thePostPoint->GetProcessDefinedStep()->GetProcessName();
+  //   if(thePostPoint->GetPhysicalVolume())
+  //     cout << ", step volume " << thePostPoint->GetPhysicalVolume()->GetName();
+  //   else
+  //     cout << ", step volume out o world";
+  //   if(theTrack->GetParentID()>0)
+  //     cout << ", track process " << theTrack->GetCreatorProcess()->GetProcessName() << endl;
+  //   else
+  //     cout << endl;
+  // }
   if(theTrack->GetParentID()==0){
     //This is a primary track 
     if(fOneStepPrimaries&&thePrePV->GetName()=="scint")
@@ -80,7 +83,7 @@ void SteppingAction::UserSteppingAction(const G4Step * theStep){
         }
       }
       fExpectedNextStatus=Undefined;
-      //cout << "boundaryStatus " << boundaryStatus <<"\t";
+      //cout << "boundaryStatus " << boundaryStatus <<endl;
       switch(boundaryStatus){
       case Absorption:
         break;
